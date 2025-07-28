@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Registro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8fafc;
+        }
+        .form-container {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .file-upload input[type="file"] {
+            display: none;
+        }
+        .file-upload-label {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .file-upload-label:hover {
+            background-color: #e9d5ff;
+        }
+        .preview-container {
+            display: none;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-md">
+        <div class="bg-white rounded-xl p-8 form-container">
+            <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Formulario de Registro</h1>
+            
+            <form id="registrationForm" class="space-y-6">
+
+                <div>
+                    <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">Nombre Completo</label>
+                    <input 
+                        type="text" 
+                        id="nombre" 
+                        name="nombre" 
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        placeholder="Ej: Juan Pérez"
+                    >
+                </div>
+
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        placeholder="Ej: correo@ejemplo.com"
+                    >
+                </div>
+                
+                <div>
+                    <label for="cedula" class="block text-sm font-medium text-gray-700 mb-1">Número de Cédula</label>
+                    <input 
+                        type="text" 
+                        id="cedula" 
+                        name="cedula" 
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        placeholder="Ej: 1234567890"
+                    >
+                </div>
+                
+                <div>
+                    <label for="monto" class="block text-sm font-medium text-gray-700 mb-1">Monto</label>
+                    <input 
+                        type="number" 
+                        id="monto" 
+                        name="monto" 
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        placeholder="Ej: 1000"
+                    >
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Factura</label>
+                    <div class="file-upload">
+                        <label for="factura" class="file-upload-label flex flex-col items-center px-4 py-6 bg-purple-50 rounded-lg border-2 border-dashed border-purple-200 text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                            </svg>
+                            <span class="text-sm text-purple-600 font-medium">Selecciona tu factura</span>
+                            <span class="text-xs text-gray-500 mt-1">PDF, JPEG, PNG de hasta 5MB</span>
+                        </label>
+                        <input 
+                            type="file" 
+                            id="factura" 
+                            name="factura" 
+                            accept="image/*,application/pdf"
+                            class="hidden"
+                        >
+                    </div>
+                    <div id="previewContainer" class="preview-container">
+                        <img id="imagePreview" src="#" alt="Vista previa del archivo seleccionado" class="max-w-full h-auto rounded-lg border border-gray-200">
+                    </div>
+                </div>
+                
+                <div class="pt-2">
+                    <button 
+                        type="submit" 
+                        class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 ease-in-out transform hover:scale-[1.01]"
+                    >
+                        Enviar Formulario
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('factura');
+            const previewContainer = document.getElementById('previewContainer');
+            const imagePreview = document.getElementById('imagePreview');
+            
+            fileInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.addEventListener('load', function() {
+                            imagePreview.src = this.result;
+                            previewContainer.style.display = 'block';
+                        });
+                        reader.readAsDataURL(file);
+                    } else {
+                        previewContainer.style.display = 'none';
+                    }
+                }
+            });
+            
+            const form = document.getElementById('registrationForm');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const nombre = document.getElementById('nombre').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const cedula = document.getElementById('cedula').value.trim();
+                const monto = document.getElementById('monto').value.trim();
+                const facturaFile = document.getElementById('factura').files[0];
+                
+                if (!nombre || !email || !cedula || !monto || !facturaFile) {
+                    alert('Por favor, completa todos los campos del formulario.');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onloadend = function() {
+                    const base64File = reader.result;
+
+                    const formData = {
+                        nombre: nombre,
+                        email: email,
+                        cedula: cedula,
+                        monto: monto, 
+                        factura: base64File 
+                    };
+
+                    fetch('http://localhost:5000/enviar-a-camunda', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error en la solicitud: ' + response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        alert('Formulario enviado correctamente:\n' + JSON.stringify(data));
+                        form.reset();
+                        previewContainer.style.display = 'none';
+                    })
+                    .catch(error => {
+                        alert('Error al enviar el formulario: ' + error.message);
+                    });
+                };
+                reader.readAsDataURL(facturaFile); 
+            });
+        });
+    </script>
+</body>
+</html>
