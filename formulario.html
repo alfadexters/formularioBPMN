@@ -168,7 +168,7 @@
                         factura: base64File 
                     };
 
-                    fetch('http://localhost:5000/enviar-a-camunda', {
+                    fetch('/enviar-a-camunda', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
